@@ -1,0 +1,10 @@
+{
+  "name": "Remix: الجحفلي للهواتف الذكية ومستلزماتها",
+  "description": "الموقع الرسمي لمحل الجحفلي للهواتف الذكية ومستلزماتها - البيع والمبيعات، صيانة، وإكسسوارات الهواتف في اليمن، صنعاء",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

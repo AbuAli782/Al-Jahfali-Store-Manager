@@ -1,0 +1,165 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net (Strictly Default-Deny Catch-All)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Connection/Diagnostic Test doc ---
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // --- Hardened Architectural Primitives & Helpers ---
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Bootstrap user email as Administrator with email-verification enforcement
+    function isAdmin() {
+      return isSignedIn() && 
+             request.auth.token.email == "lya628625@gmail.com" && 
+             request.auth.token.email_verified == true;
+    }
+
+    // --- 1. Products Collection (/products/{productId}) ---
+    match /products/{productId} {
+      allow read, list: if true; // Public access for customers to browse catalog
+      allow create, update: if isAdmin() && isValidId(productId) && isValidProduct(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    function isValidProduct(data) {
+      return data.keys().hasAll(['id', 'name', 'arabicName', 'category', 'brand', 'price', 'image', 'specs', 'description', 'stock']) &&
+             data.keys().size() <= 15 &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() <= 128 &&
+             data.arabicName is string && data.arabicName.size() <= 128 &&
+             data.category is string && (
+               data.category == 'smartphones' || 
+               data.category == 'used_devices' || 
+               data.category == 'recharge_cards' || 
+               data.category == 'accessories' || 
+               data.category == 'electronics'
+             ) &&
+             data.brand is string && data.brand.size() <= 50 &&
+             data.price is number && data.price >= 0 && data.price <= 3000000 &&
+             data.image is string && data.image.size() <= 500 &&
+             data.specs is list && data.specs.size() <= 15 &&
+             data.description is string && data.description.size() <= 2000 &&
+             data.stock is number && data.stock >= 0;
+    }
+
+    // --- 2. Testimonials Collection (/testimonials/{testimonialId}) ---
+    match /testimonials/{testimonialId} {
+      allow read, list: if true; // Public listings so visitors see authentic feedback
+      allow create: if isValidId(testimonialId) && isValidTestimonial(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    function isValidTestimonial(data) {
+      return data.keys().hasAll(['id', 'name', 'rating', 'comment', 'date']) &&
+             data.keys().size() <= 6 &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.comment is string && data.comment.size() > 0 && data.comment.size() <= 1000 &&
+             data.date is string && data.date.size() <= 25;
+    }
+
+    // --- 3. Maintenance Bookings Collection (/bookings/{bookingId}) ---
+    match /bookings/{bookingId} {
+      allow read, list: if isAdmin(); // PII isolation: Only admin can fetch/list all customer booking info
+      allow create: if isValidId(bookingId) && isValidBooking(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    function isValidBooking(data) {
+      return data.keys().hasAll(['id', 'name', 'phone', 'device', 'fault']) &&
+             data.keys().size() <= 6 &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 120 &&
+             data.phone is string && data.phone.size() >= 6 && data.phone.size() <= 25 &&
+             data.device is string && data.device.size() > 0 && data.device.size() <= 100 &&
+             data.fault is string && data.fault.size() > 0 && data.fault.size() <= 800;
+    }
+
+    // --- 4. Repair Jobs Track Collection (/jobs/{jobId}) ---
+    match /jobs/{jobId} {
+      allow get: if isValidId(jobId); // Customers can query their specific card ID synchronously
+      allow list: if isAdmin(); // Prevents bulk database scraping of client repair tickets
+      allow create, update: if isAdmin() && isValidId(jobId) && isValidJob(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    function isValidJob(data) {
+      return data.keys().hasAll(['id', 'device', 'fault', 'price', 'status', 'engineer', 'receivedDate', 'readyDate']) &&
+             data.keys().size() <= 10 &&
+             data.id is string && data.id.size() <= 64 &&
+             data.device is string && data.device.size() <= 150 &&
+             data.fault is string && data.fault.size() <= 1000 &&
+             data.price is string && data.price.size() <= 100 &&
+             data.status is string && (
+               data.status == 'ready' || 
+               data.status == 'in-progress' || 
+               data.status == 'spare-parts' || 
+               data.status == 'diagnosed'
+             ) &&
+             data.engineer is string && data.engineer.size() <= 150 &&
+             data.receivedDate is string && data.receivedDate.size() <= 30 &&
+             data.readyDate is string && data.readyDate.size() <= 100;
+    }
+
+    // --- 5. Settings / Exchange Rates Collection (/settings/exchange_rates) ---
+    match /settings/{settingsId} {
+      allow read: if true; // Allow visitors to fetch current public currency prices
+      allow create, update, delete: if isAdmin() && isValidSettings(request.resource.data);
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasAll(['usdBuy', 'sarBuy', 'usdSell', 'sarSell']) &&
+             data.keys().size() <= 6 &&
+             data.usdBuy is number && data.usdBuy > 0 &&
+             data.sarBuy is number && data.sarBuy > 0 &&
+             data.usdSell is number && data.usdSell > 0 &&
+             data.sarSell is number && data.sarSell > 0;
+    }
+
+    // --- 6. Employees Collection (/employees/{employeeId}) ---
+    match /employees/{employeeId} {
+      allow read, list: if isAdmin(); // Only Admin can view staff listings
+      allow create, update: if isAdmin() && isValidId(employeeId) && isValidEmployee(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    function isValidEmployee(data) {
+      return data.keys().hasAll(['id', 'name', 'username', 'role', 'permissions', 'status']) &&
+             data.keys().size() <= 8 &&
+             data.id is string && data.id.size() <= 64 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 150 &&
+             data.username is string && data.username.size() > 0 && data.username.size() <= 100 &&
+             data.role is string && (
+               data.role == 'admin' || 
+               data.role == 'manager' || 
+               data.role == 'sales' || 
+               data.role == 'technician'
+             ) &&
+             data.permissions is list && data.permissions.size() <= 10 &&
+             (data.permissions.size() == 0 || (data.permissions.size() > 0 && data.permissions[0] is string)) &&
+             data.status is string && (
+               data.status == 'active' || 
+               data.status == 'suspended'
+             ) &&
+             (!('password' in data) || (data.password is string && data.password.size() <= 100)) &&
+             (!('lastActive' in data) || (data.lastActive is string && data.lastActive.size() <= 100));
+    }
+
+  }
+}

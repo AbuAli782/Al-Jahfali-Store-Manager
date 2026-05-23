@@ -1,0 +1,107 @@
+{
+  "entities": {
+    "product": {
+      "title": "Product",
+      "description": "Products, accessories, used smartphones and recharge packages",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique product identification string" },
+        "name": { "type": "string", "description": "English name of the product" },
+        "arabicName": { "type": "string", "description": "Arabic display name of the product" },
+        "category": { "type": "string", "description": "Category: smartphones, used_devices, recharge_cards, accessories, electronics" },
+        "brand": { "type": "string", "description": "Manufacturer brand e.g., Samsung, Apple, Xiaomi" },
+        "price": { "type": "number", "description": "Actual price in Yemeni Rial (YER)" },
+        "originalPrice": { "type": "number", "description": "Original price for discount comparison (optional)" },
+        "image": { "type": "string", "description": "URL path to product display image" },
+        "specs": { "type": "array", "description": "Bullet specs in Arabic" },
+        "description": { "type": "string", "description": "Rich description text in Arabic" },
+        "isBestSeller": { "type": "boolean", "description": "Firms display in best seller clusters" },
+        "isSpecialOffer": { "type": "boolean", "description": "Firms display in discounts clusters" },
+        "isNewArrival": { "type": "boolean", "description": "Firms display in new arrival groups" },
+        "stock": { "type": "number", "description": "Units available" }
+      },
+      "required": ["id", "name", "arabicName", "category", "brand", "price", "image", "specs", "description"]
+    },
+    "testimonial": {
+      "title": "Testimonial",
+      "description": "Genuine customer reviews and experiences",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "description": "Customer name" },
+        "rating": { "type": "number", "description": "Scale of 1-5 stars" },
+        "comment": { "type": "string" },
+        "date": { "type": "string", "format": "date", "description": "Date of comment" }
+      },
+      "required": ["id", "name", "rating", "comment", "date"]
+    },
+    "booking": {
+      "title": "Maintenance Booking",
+      "description": "维修/صيانة حجز لزبائن الورشة",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "description": "Client full name" },
+        "phone": { "type": "string" },
+        "device": { "type": "string", "description": "Device model" },
+        "fault": { "type": "string", "description": "Fault specification" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "phone", "device", "fault"]
+    },
+    "job": {
+      "title": "Repair Job Record",
+      "description": "Trackable maintenance status ticket used by customers via tracker code",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Maintenance sheet tracking number e.g. 7818, 1234" },
+        "device": { "type": "string" },
+        "fault": { "type": "string" },
+        "price": { "type": "string", "description": "Estimated cost" },
+        "status": { "type": "string", "enum": ["ready", "in-progress", "spare-parts", "diagnosed"] },
+        "engineer": { "type": "string" },
+        "receivedDate": { "type": "string" },
+        "readyDate": { "type": "string" }
+      },
+      "required": ["id", "device", "fault", "price", "status", "engineer", "receivedDate", "readyDate"]
+    },
+    "employee": {
+      "title": "Employee Profile",
+      "description": "Store employees credentials, permissions, status and activity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique employee ID" },
+        "name": { "type": "string", "description": "Arabic full name of the employee" },
+        "username": { "type": "string", "description": "Unique username used to log in" },
+        "password": { "type": "string", "description": "Personal password or passcode" },
+        "role": { "type": "string", "description": "Role: admin, manager, sales, technician" },
+        "permissions": { "type": "array", "description": "Activated permissions for this employee" },
+        "status": { "type": "string", "description": "Account status: active, suspended" },
+        "lastActive": { "type": "string", "description": "AR timestamp of last activity keying in" }
+      },
+      "required": ["id", "name", "username", "role", "permissions", "status"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "product",
+      "description": "Listing of all available products"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "testimonial",
+      "description": "Customer feedback catalog"
+    },
+    "/bookings/{bookingId}": {
+      "schema": "booking",
+      "description": "Client registrations for repairs"
+    },
+    "/jobs/{jobId}": {
+      "schema": "job",
+      "description": "Trackable tickets for maintenance status"
+    },
+    "/employees/{employeeId}": {
+      "schema": "employee",
+      "description": "Staff account records and sub-authorization boundaries"
+    }
+  }
+}

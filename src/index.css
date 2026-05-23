@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/* Global Font Face override for Elite Arabic typography */
+html, body {
+  font-family: 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif !important;
+  scroll-behavior: smooth;
+  background-color: #020617; /* Slate-950 */
+}
+
+/* Custom animations for smooth modal entries & drawer slides */
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-left {
+  animation: slideLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom premium glass-styled scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #020617;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 99px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+
+/* Custom form range slider styling */
+input[type="range"] {
+  cursor: pointer;
+}
