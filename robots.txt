@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Sitemap: https://YOUR_APP_URL/sitemap.xml
+
+# If you deploy under a subpath, update the Sitemap URL above.
