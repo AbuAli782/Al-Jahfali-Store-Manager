@@ -1301,6 +1301,51 @@ export default function App() {
 
       </main>
 
+      {/* 2.8 SEO Keywords & Local Business Credentials Accordion */}
+      <section className={`py-12 border-t ${isDark ? 'bg-slate-950/40 border-slate-900' : 'bg-slate-100/50 border-slate-200'}`} dir="rtl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            
+            <div className="text-right space-y-4">
+              <h3 className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                لماذا تختار محلات الجحفلي للهواتف الذكية بصنعاء؟
+              </h3>
+              <p className={`text-xs sm:text-sm leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                تعتبر <b>محلات الجحفلي للهواتف الذكية ومستلزماتها</b> بإدارة <b>الأستاذ جمال الجحفلي</b> من أوثق وأعرق محلات بيع وصيانة الأجهزة الذكية في أمانة العاصمة صنعاء - دارس. نوفر ضمانات حقيقية وخدمات مبيعات وصيانة متميزة وموثوقة لأكثر من 10 سنوات.
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                <div className={`p-4 rounded-xl border ${isDark ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200'}`}>
+                  <span className="text-amber-500 font-bold text-xs block mb-1">اتصال مباشر بالمدير جمال الجحفلي:</span>
+                  <span className={`text-sm font-mono font-bold block ${isDark ? 'text-white' : 'text-slate-800'}`}>781831833</span>
+                  <span className={`text-sm font-mono font-bold block ${isDark ? 'text-white' : 'text-slate-800'}`}>781831833</span>
+                </div>
+                
+                <div className={`p-4 rounded-xl border ${isDark ? 'bg-slate-900/60 border-slate-800' : 'bg-white border-slate-200'}`}>
+                  <span className="text-amber-500 font-bold text-xs block mb-1">الرقم الدولي والواتساب المعتمد:</span>
+                  <span className={`text-sm font-mono font-bold block ${isDark ? 'text-white' : 'text-slate-800'}`}>+967 781831833</span>
+                  <span className={`text-sm font-mono font-bold block ${isDark ? 'text-white' : 'text-slate-800'}`}>+967 781831833</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-right space-y-4">
+              <h3 className={`text-base font-black ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                الكلمات الدلالية ومحاور البحث الشائعة لعملائنا:
+              </h3>
+              <p className="text-[11px] leading-relaxed text-slate-500">
+                محل الجحفلي للهواتف صنعاء دارس، رقم تلفون جمال الجحفلي 781831833، صيانة شاشات أصلية صنعاء، شراء آيفون وكالة مستعمل اليمن، شحن باقة سوبر يمن موبايل فوري دارس الخط العام، رقم 781831833 الجحفلي صيانة، أسعار الصرف والدولار في صنعاء متجر الجحفلي، وكيل هواتف شاومي وسامسونج اليمن، ورشة صيانة جمال الجحفلي، أفضل مهندس تلفونات بصنعاء.
+              </p>
+              
+              <div className={`p-4 rounded-xl border ${isDark ? 'bg-slate-900/20 border-slate-800' : 'bg-slate-100 border-slate-200'} text-[11px] leading-relaxed text-slate-400`}>
+                ℹ️ <b>دليل الوصول والأرشفة:</b> يسهل هذا القسم على محرك بحث Google مطابقة كلمات البحث المكتوبة من قبل زبائننا بصنعاء واليمن للوصول مباشرة إلى صفحة تتبع صيانة أجهزتهم وحساب الصرف ومعرض الأجهزة.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* 3. Immersive Footer with directions & copyrights */}
       <footer className="bg-slate-950 border-t border-slate-900 py-12 text-slate-400" dir="rtl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
