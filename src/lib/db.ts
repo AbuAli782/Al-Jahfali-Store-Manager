@@ -82,7 +82,8 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
     path
   };
   console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
+  isFirestoreOffline = true;
+  // We do not throw here to allow graceful offline / local fallback without crashing the React UI.
 }
 
 // Helper to determine if a Firestore error is related to rules/permissions (which we must throw)
