@@ -23,6 +23,7 @@ interface AdminPanelProps {
   onUpdateProduct: (product: Product) => void;
   onDeleteProduct: (productId: string) => void;
   onResetToDefaults: () => void;
+  isDark?: boolean;
 }
 
 type AdminTab = 'products' | 'jobs' | 'bookings' | 'rates' | 'testimonials' | 'employees';
@@ -34,7 +35,8 @@ export default function AdminPanel({
   onAddProduct,
   onUpdateProduct,
   onDeleteProduct,
-  onResetToDefaults
+  onResetToDefaults,
+  isDark = true
 }: AdminPanelProps) {
   // Authorization credentials with local sessions
   const [username, setUsername] = useState('');
@@ -1216,9 +1218,9 @@ export default function AdminPanel({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 text-slate-100 font-sans" dir="rtl">
+    <div className={`fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 font-sans transition-colors duration-300 ${isDark ? 'text-slate-100 admin-dark-theme' : 'text-slate-800 admin-light-theme'}`} dir="rtl">
       {/* Backdrop */}
-      <div onClick={onClose} className="absolute inset-0 bg-indigo-950/75 backdrop-blur-md transition-opacity" />
+      <div onClick={onClose} className={`absolute inset-0 transition-opacity backdrop-blur-md ${isDark ? 'bg-indigo-950/75' : 'bg-slate-900/60'}`} />
 
       {/* Admin Window - Premium Slate Indigo Royal Layout */}
       <div className="relative bg-gradient-to-br from-slate-900 via-indigo-950/85 to-slate-900 border border-indigo-400/20 rounded-3xl w-full max-w-5xl z-10 shadow-[0_25px_60px_rgba(49,46,129,0.35)] overflow-hidden max-h-[92vh] flex flex-col animate-fade-in text-right">
@@ -1298,9 +1300,6 @@ export default function AdminPanel({
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full text-center px-4 py-2.5 bg-slate-950 border border-slate-800 focus:border-amber-500 text-white rounded-xl focus:outline-none font-mono tracking-widest text-lg"
                 />
-                <span className="block text-right text-[10px] text-amber-500/80 mt-1 mr-1">
-                  💡 تلميح: اترك حقل الاسم فارغاً واكتب هاتف المحل <b>781831833</b> للدخول مباشرة كمدير عام.
-                </span>
               </div>
 
               {loginError && (

@@ -1472,6 +1472,7 @@ export default function App() {
         onUpdateProduct={handleUpdateProduct}
         onDeleteProduct={handleDeleteProduct}
         onResetToDefaults={handleResetToDefaults}
+        isDark={isDark}
       />
 
     </div>
