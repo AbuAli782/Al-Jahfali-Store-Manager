@@ -13,7 +13,7 @@ import {
   dbGetEmployees, dbSaveEmployee, dbDeleteEmployee,
   auth, isFirebaseReal, isFirestoreOffline
 } from '../lib/db';
-import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'firebase/auth';
+import { signInWithPopup, signInWithRedirect, GoogleAuthProvider, signOut, onAuthStateChanged } from 'firebase/auth';
 
 interface AdminPanelProps {
   isOpen: boolean;
@@ -931,7 +931,7 @@ export default function AdminPanel({
 
   if (!isOpen) return null;
 
-  // Google Sign-In with Firebase Auth
+  // Google Sign-In with Firebase Auth supporting direct iframe redirect fallback
   const handleGoogleLogin = async () => {
     if (!isFirebaseReal || !auth) {
       setLoginError('قاعدة البيانات الحقيقية غير مفعلة حالياً.');
@@ -939,8 +939,17 @@ export default function AdminPanel({
     }
     setIsSigningIn(true);
     setLoginError('');
+    
+    const provider = new GoogleAuthProvider();
+    const inIframe = window.self !== window.top;
+
     try {
-      const provider = new GoogleAuthProvider();
+      if (inIframe) {
+        console.log("App is running inside an iframe. Using signInWithRedirect for compatibility.");
+        await signInWithRedirect(auth, provider);
+        return; // Redirecting...
+      }
+
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       setFirebaseUser(user);
@@ -977,7 +986,12 @@ export default function AdminPanel({
     } catch (err: any) {
       console.error(err);
       if (err.code === 'auth/popup-blocked' || err.message?.includes('popup') || err.message?.toLowerCase().includes('popup-blocked') || err.message?.toLowerCase().includes('blocked')) {
-        setLoginError('🔏 قام المتصفح بحظر النافذة المنبثقة لمصادقة جوجل بسبب تشغيل التطبيق في نافذة مستعارة (Iframe). يرجى فتح التطبيق في نافذة مستقلة كاملة، أو استخدام رمز الدخول السريع (هاتف المحل) أدناه لتسجيل الدخول فوراً وبأمان تام.');
+        console.log("Popup blocked. Falling back to signInWithRedirect...");
+        try {
+          await signInWithRedirect(auth, provider);
+        } catch (redirErr: any) {
+          setLoginError(`فشل الاتصال بالتحويل التلقائي: ${redirErr.message || String(redirErr)}`);
+        }
       } else {
         setLoginError(`خطأ في مصادقة جوجل: ${err.message || String(err)}`);
       }
