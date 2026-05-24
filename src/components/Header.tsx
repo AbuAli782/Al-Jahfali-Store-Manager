@@ -53,7 +53,7 @@ export default function Header({
     { id: 'used_devices', label: 'مستعمل ومجدد' },
     { id: 'recharge_cards', label: 'باقات وبطاقات شحن' },
     { id: 'services', label: 'ورشة الصيانة والتتبع' },
-    { id: 'offers', label: 'عروض وخصومات' },
+    { id: 'offers', label: 'العروض الخاصة' },
   ];
 
   return (

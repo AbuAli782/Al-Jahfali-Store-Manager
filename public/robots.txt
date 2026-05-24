@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://al-jahfali-store-manager.onrender.com/sitemap.xml

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Replace https://YOUR_APP_URL with your actual deployed site URL -->
   <url>
-    <loc>https://al-jahfali-store-manager.onrender.com/</loc></loc>
+    <loc>https://al-jahfali-store-manager.onrender.com/</loc>
     <lastmod>2026-05-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>

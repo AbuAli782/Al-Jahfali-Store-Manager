@@ -23,6 +23,21 @@ export default function App() {
   // Page Navigation State
   const [currentTab, setCurrentTab] = useState('all');
 
+  // Theme State (Dark mode default)
+  const [isDark, setIsDark] = useState(true);
+
+  const handleToggleTheme = () => {
+    setIsDark(prev => !prev);
+  };
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDark]);
+
   // Application Database States
   const [products, setProducts] = useState<Product[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -280,7 +295,7 @@ export default function App() {
   const specialOffersShowcase = products.filter(p => p.isSpecialOffer || (p.originalPrice && p.originalPrice > p.price)).slice(0, 4);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-950" dir="rtl">
+    <div className={`min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 transition-colors duration-300 ${isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-800'}`} dir="rtl">
       
       {/* 1. Universal Top Header bar */}
       <Header
@@ -300,6 +315,8 @@ export default function App() {
         }}
         openAdmin={() => setIsAdminOpen(true)}
         isAdminLoggedIn={isAdminLoggedIn}
+        isDark={isDark}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* 2. Page Content Router */}
@@ -445,6 +462,7 @@ export default function App() {
                     onOrderNow={handleOrderNowDirectly}
                     isWishlisted={wishlistItems.some(item => item.id === prod.id)}
                     onToggleWishlist={handleToggleWishlist}
+                    isDark={isDark}
                   />
                 ))}
               </div>
@@ -514,6 +532,7 @@ export default function App() {
                       onOrderNow={handleOrderNowDirectly}
                       isWishlisted={wishlistItems.some(item => item.id === prod.id)}
                       onToggleWishlist={handleToggleWishlist}
+                      isDark={isDark}
                     />
                   ))
                 ) : (
@@ -551,6 +570,7 @@ export default function App() {
                     onOrderNow={handleOrderNowDirectly}
                     isWishlisted={wishlistItems.some(item => item.id === prod.id)}
                     onToggleWishlist={handleToggleWishlist}
+                    isDark={isDark}
                   />
                 ))}
               </div>
@@ -724,6 +744,7 @@ export default function App() {
                     onOrderNow={handleOrderNowDirectly}
                     isWishlisted={wishlistItems.some(item => item.id === prod.id)}
                     onToggleWishlist={handleToggleWishlist}
+                    isDark={isDark}
                   />
                 ))}
               </div>
@@ -789,6 +810,7 @@ export default function App() {
                     onOrderNow={handleOrderNowDirectly}
                     isWishlisted={true}
                     onToggleWishlist={handleToggleWishlist}
+                    isDark={isDark}
                   />
                 ))}
               </div>
